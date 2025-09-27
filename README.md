@@ -20,6 +20,15 @@ Este proyecto despliega **Flowise** con una base de datos **PostgreSQL** dedicad
 El objetivo de este trabajo es desplegar una aplicación con Flowise, integrada con su propia base de datos PostgreSQL, utilizando Docker Compose. 
 
 ---
+## 🖥️ Descarga del repositorio
+- Descargar el repositorio
+git clone https://github.com/TinchoXD/Grupo4_Docker_TareaFinal.git
+<img width="886" height="92" alt="imagen" src="https://github.com/user-attachments/assets/5d5d929d-1c8d-4665-aa21-23987d4c06b9" />
+
+- Navegar a la carpeta descargada
+ cd Grupo4_Docker_TareaFinal/
+<img width="886" height="50" alt="imagen" src="https://github.com/user-attachments/assets/33ad0f6a-debf-4eec-91e6-3a51057e306c" />
+
 
 ## 🚀 Requisitos previos
 - Docker instalado
