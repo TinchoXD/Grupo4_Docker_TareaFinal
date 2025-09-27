@@ -54,7 +54,7 @@ docker system df
 2. **Liberar espacio de imágenes/volúmenes huérfanos**
 
 ```bash
-docker system prune -af –-volumes
+docker system prune -af --volumes
 ```
 <img width="886" height="789" alt="image" src="https://github.com/user-attachments/assets/ed539125-df58-4177-84b1-f838522829ef" />
   
@@ -150,7 +150,7 @@ docker compose down
 <img width="886" height="105" alt="image" src="https://github.com/user-attachments/assets/a8795069-4d2c-4d74-a4e3-16bb55252814" />
 
 ```bash
-docker compose up -d –build
+docker compose up -d -build
 ```
 <img width="886" height="121" alt="image" src="https://github.com/user-attachments/assets/d497b4e0-af40-40fb-be4c-ba1b259d9071" />
 
