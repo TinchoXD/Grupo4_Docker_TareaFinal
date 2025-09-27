@@ -1,216 +1,231 @@
-# 📌 Grupo 4
-## 📌 TAREA 02: Despliegue de infraestructura con docker compose.
+# Grupo4_Docker_TareaFinal
 
-
----
+# Despliegue de Flowise con PostgreSQL en Docker Compose
 
 ## 🚀 Integrantes
 | Nro. | Nombre | Link |
 |------|---------|---------|
-| 1 | Giovanni Xavier Baño Jaya | https://github.com/Giovanni26101982/Grupo4_Docker_Tarea2  |
-| 2 | Portero Salas Onofre Lolislao | https://github.com/oportero/Grupo4_Docker_Tarea2  |
-| 3 | Jara Pauta Cesar Paúl | https://github.com/PaulJara84/Grupo4_Docker_Tarea2  |
-| 4 | Maldonado Flores Oscar Alexander | https://github.com/Oscar112248/Grupo4_Docker_Tarea2 |
-| 5 | Balarezo Leon Ricardo Martin | https://github.com/TinchoXD/Grupo4_Docker_Tarea2  |
+| 1 | Giovanni Xavier Baño Jaya | https://github.com/Giovanni26101982/Grupo4_Docker_TareaFinal |
+| 2 | Portero Salas Onofre Lolislao | https://github.com/oportero/Grupo4_Docker_TareaFinal |
+| 3 | Jara Pauta Cesar Paúl | https://github.com/PaulJara84/Grupo4_Docker_TareaFinal |
+| 4 | Maldonado Flores Oscar Alexander | https://github.com/Oscar112248/Grupo4_Docker_TareaFinal |
+| 5 | Balarezo Leon Ricardo Martin | https://github.com/TinchoXD/Grupo4_Docker_TareaFinal |
 
 ---
 
 ## 📖 Introducción
 
-Esta implementación representa un entorno completo de WordPress containerizado, diseñado bajo principios de DevOps e infraestructura como código.
+Este proyecto despliega **Flowise** con una base de datos **PostgreSQL** dedicada, utilizando **Docker Compose**.
 
-Desplegar una instancia de WordPress 100% funcional y aislada que incluya:
-
-- Servicio de aplicación: WordPress
-- Base de datos: MariaDB para persistencia de datos
-- Gestión de configuraciones: Variables de entorno centralizadas
-- Persistencia: Volúmenes para datos críticos
-
-Componentes Implementados
-1. Orquestación con Docker Compose
-   Coordinación automática de múltiples servicios interconectados, gestionando su ciclo de vida de manera unificada.
-   
-2. Aislamiento con Contenedores
-   
-   - WordPress: Servicio web independiente
-   - MariaDB: Motor de base de datos aislado
-   - Comunicación controlada: Red virtual dedicada
-
-3. Persistencia con Volúmenes Docker
-   - db_data:    # Base de datos (contenido, usuarios, configuraciones)
-   - wp_data:    # Archivos WordPress (themes, plugins, uploads)
-
-4. Seguridad con Variables de Entorno
-   
-   Implementación mediante archivo .env que permite:
-   
-   - Separación de configuración y código
-   - Seguridad de credenciales sensibles
-   - Portabilidad entre diferentes entornos
-   - Versionado seguro (excluido de repositorios)
+El objetivo de este trabajo es desplegar una aplicación con Flowise, integrada con su propia base de datos PostgreSQL, utilizando Docker Compose. 
 
 ---
 
-## 🚀 Características
-- wordpress:6.5.2-php8.2-apache
+## 🚀 Requisitos previos
+- Docker instalado
+- Docker Compose instalado
 
----  
+---
 
 ## 📂 Estructura
 ```bash
-├── .env
-├── docker-compose.yml
+flowise-postgres/
+│── docker-compose.yml
+│── .env
 └── README.md
-
 ```
---- 
+
+---
 
 ## 🛠 Desarrollo - Procedimiento
 
----
-Para la presente práctica utilizamos versión de imagen wordpress: wordpress:6.5.2-php8.2-apache
+--- 
+1. **Ver espacio disponible**
+
+   Antes de ejecutar, verificar que existe espacio en disco (opcional se pueden remover los volúmenes que ya no se utilizan)
+
+```bash
+docker system df
+```
+<img width="886" height="170" alt="image" src="https://github.com/user-attachments/assets/76604ba6-2ab3-44c0-aac6-3a2e5d7c0bc7" />
+
 --- 
 
-1. **PASO 1: Creamos un archivo .env para colocar las credenciales de conexión tanto de base como del wordpress a través del comando:**
+2. **Liberar espacio de imágenes/volúmenes huérfanos**
 
 ```bash
-nano .env
+docker system prune -af –-volumes
 ```
-<img width="424" height="440" alt="01" src="https://github.com/user-attachments/assets/837b518c-ab81-4b42-8333-1b34bb8164ce" />
+<img width="886" height="789" alt="image" src="https://github.com/user-attachments/assets/ed539125-df58-4177-84b1-f838522829ef" />
+  
+  - Se eliminará:
+  
+    - contenedores detenidos
+    - imágenes no usadas
+    - volúmenes no usados
+    - redes no usadas
 
-Las ventajas de utilizar este archivo son:
--	No se tienen contraseñas expuestas en el docker-compose
--	Se puede cambiar fácilmente las contraseñas
--	Se pueden compartir sin exponer datos sensibles
--	Se pueden tener varios archivo .env para diferentes ambientes de trabajo
+--- 
 
----
-
-2. **PASO 2: Creamos un archivo docker-compose.yml, con el comando:**
+3. **Verificar imágenes grandes**
 
 ```bash
-nano docker-compose.yml
+docker images --digests --no-trunc --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}"
 ```
-Realizar lo siguiente:
+<img width="886" height="70" alt="image" src="https://github.com/user-attachments/assets/06fb3f4c-e57b-4171-af7a-577a08e41db3" />
 
-Servicio db
--	Crea un contenedor Maria db 10.6.4
--	Configura usuario y base de datos de manera aurompatica
--	Los datos se guardan en un volumen persistente db_data
-Servicio Wordpress
--	Crea contenedor con wordpress
--	Se conecta automáticamente a la base de datos
--	Los archivos de wordpress persisten
--	Se expone wordpress en http://localhost:80
+--- 
 
-Volúmenes:
-- db_data # volumen para datos de BD
-- wp_data # volumen para archivos WP
-
-<img width="698" height="641" alt="02" src="https://github.com/user-attachments/assets/8d056743-0238-4ae0-8ae4-be363b61eaea" />
-
----
-
-3. **PASO 3: Verificamos los archivo a través de:**
+4. **Eliminar imágenes si existen:**
 
 ```bash
-tree –a
+docker rmi <image_id>
 ```
-<img width="801" height="128" alt="03" src="https://github.com/user-attachments/assets/802bc5c7-1233-416f-b7d4-fd724f39c1b7" />
 
----
+--- 
 
-4. **PASO 4: Flujo de ejecución:**
-
-- Ejecutar:
+5. **Ejecutar docker compose:**
 
 ```bash
-docker compose up -d
+docker compose up --build -d
 ```
+<img width="886" height="783" alt="image" src="https://github.com/user-attachments/assets/129cef40-9929-4eda-885d-4307f5f0d347" />
 
-<img width="1012" height="308" alt="04" src="https://github.com/user-attachments/assets/e0cc6d15-8b03-4ac2-99c6-da70443f5182" />
+--- 
 
--	Descarga las imágenes si no existen
-
-<img width="1182" height="712" alt="05" src="https://github.com/user-attachments/assets/1683cf28-75b3-4143-8d40-59cc885e8ce3" />
-
--	Crea red virtual para comunicación entre servicios
-
--	Crea volúmenes persistentes
-
--	Inicia contenedor de BD con configuración
-
--	Inicia WordPress que espera a que BD esté lista
-
--	WordPress se conecta automáticamente a la BD
-
--	Configuración automática
-
--	WordPress detecta que es primera instalación
-
--	Crea tablas en la base de datos
-
--	Muestra pantalla de instalación inicial
-
-
----
-
-5. **PASO 5: Una vez levantados los servicios se muestra la siguiente ventana a través del comando:**
+6. **Verificar el estado de los contenedores:**
 
 ```bash
-docker compose ps
+docker ps -a
 ```
+<img width="886" height="102" alt="image" src="https://github.com/user-attachments/assets/3c72451e-be44-42ad-ac7b-02f621ceacc9" />
 
-<img width="1587" height="832" alt="06" src="https://github.com/user-attachments/assets/05b8a7ed-c09e-4b90-a9dc-4ca49694c35c" />
-
+   - En este caso la base de datos (flowise-db) está `Up (healthy)`, pero el contenedor de `Flowise` aparece en: `Restarting (0) 23 secongs ago`
 ---
 
-
-6. **PASO 6: Verificamos que hayan tomado los valores correctos del archivo .env a través del siguiente comando:**
+7. **Verificar el Log**
 
 ```bash
-docker compose config
+docker logs -f flowise
 ```
+<img width="886" height="760" alt="image" src="https://github.com/user-attachments/assets/eefe7c5a-f518-42bb-8115-903d95cff636" />
 
-<img width="1093" height="807" alt="07" src="https://github.com/user-attachments/assets/49a35919-e7fe-423e-b56a-3e3f724a1f8c" />
+   - Se repite en bucle
+```bash
+Flowiseai Server
+VERSION
+  flowise/1.6.3 linux-x64 node-v18.20.1
+
+USAGE
+  $ flowise [COMMAND]
+COMMANDS
+  start
+Flowiseai Server
+VERSION
+  flowise/1.6.3 linux-x64 node-v18.20.1
+USAGE
+  $ flowise [COMMAND]
+COMMANDS
+  Start
+.
+.
+.
+```
+   - Eso significa que la `imagen oficial de Flowise` no arranca en el servidor automáticamente, sino que requiere que le pases explícitamente el comando start.
+---
+
+8. **Se modifica el .yml para solucionar el error**
+
+```bash
+Antes -> command: ["flowise"]
+Nuevo -> command: ["flowise", "start"]
+```
+---
+
+9. **Volver a crear el contenerdo**
+
+```bash
+docker compose down
+```
+<img width="886" height="105" alt="image" src="https://github.com/user-attachments/assets/a8795069-4d2c-4d74-a4e3-16bb55252814" />
+
+```bash
+docker compose up -d –build
+```
+<img width="886" height="121" alt="image" src="https://github.com/user-attachments/assets/d497b4e0-af40-40fb-be4c-ba1b259d9071" />
+
+```bash
+docker ps -a
+```
+<img width="886" height="103" alt="image" src="https://github.com/user-attachments/assets/3486b1b1-1ec6-4ac3-8daa-ab88ec282de7" />
 
 ---
 
-7. **PASO 7: Finalmente verificamos la pantalla de instalación**
+10. **Validar la navegación a la dirección local del contenedor en el host**
 
-<img width="999" height="630" alt="08" src="https://github.com/user-attachments/assets/0ad00844-8b52-47e0-936e-21b726640929" />
+```bash
+http://localhost:3000/
+```
+<img width="886" height="716" alt="image" src="https://github.com/user-attachments/assets/8b069289-49ef-47db-a526-4144849234bd" />
+
+---
+
+11. **Accesar utilizando las credenciales del .env**
+
+<img width="886" height="693" alt="image" src="https://github.com/user-attachments/assets/1a14e45d-9a39-441f-b158-022fe8e47c24" />
+
+---
+
+12. **Validar la aplicación de Flowise**
+
+<img width="886" height="673" alt="image" src="https://github.com/user-attachments/assets/279384b7-444d-41af-9f24-6e1247f84295" />
 
 ---
 
 
-## ✅ Conclusiones - Recomendaciones
 
-Implementación con versión de imagen de wordpress sin inconvenientes.
+## ✅ Conclusiones
 
-a)	Implementación:
-   - Despliegue: Todos los servicios se inicializaron correctamente
-   -	Arquitectura containerizada funcional: WordPress + MariaDB operando en contenedores aislados
-   -	Comunicación inter-servicios efectiva: Conexión WordPress → BD establecida sin errores
+1. **Compatibilidad de versión de Compose**
 
-b)	Ventajas
-   -	Entorno 100% replicable
-   -	Control exacto de versiones de software
-   -	Servicios independientes pero conectados
+   -	La instrucción name: solo es reconocida en la especificación moderna de Compose (ejecutando docker compose en lugar de docker-compose).
+     <img width="886" height="117" alt="image" src="https://github.com/user-attachments/assets/9d6de6da-b703-4fc5-a47b-2afc23410a30" />
 
-c)	Configuración Optima
-   -	Contraseñas y configuraciones aisladas en variables de entorno
-   -	Servicios optimizados para su función específica
-   -	Fácil actualización de versiones mediante cambio de tags
+   -	Se detectó que version: ya es obsoleto en Compose V2, por lo que puede omitirse para evitar advertencias.
+     <img width="711" height="441" alt="image" src="https://github.com/user-attachments/assets/a68e5832-6cc0-4540-a947-db94d9bbd159" />
 
-d)	Métricas
-   -	Contenedores operativos: 2/2 servicios running
-   -	WordPress accesible vía puerto 80
-   -	Volúmenes creados y montados correctamente
-   -	Comunicación interna servicio db → wordpress
-   -	Servicios responden sin errores
-e)	Buenas prácticas implementadas
-   -	Uso de versiones específicas  Evita breaking changes
-   -	Variables de entorno  Separación configuración/código
-   -	Volúmenes nombrados  Persistencia garantizada
+2. **Gestión de espacio en disco**
 
----
+   - Durante la descarga de la imagen flowiseai/flowise:1.6.3 se produjo un error de “no space left on device”.
+   - Se resolvió mediante limpieza de imágenes, volúmenes y contenedores no utilizados, confirmando la importancia de tener espacio disponible antes de la instalación.
+
+3.	**Ejecución del contenedor Flowise**
+   
+      - El contenedor entraba en bucle de reinicios porque la imagen oficial requiere ejecutar explícitamente el comando flowise start.
+      - Al añadir command: ["flowise", "start"] en el docker-compose.yml, el servicio se inicializó correctamente y quedó accesible en el puerto configurado.
+     
+4.	**Base de datos y persistencia**
+
+      - El contenedor PostgreSQL respondió como healthy, lo que confirma que la configuración de credenciales (POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB) fue correcta.
+      - Se definieron volúmenes (flowise_db_data y flowise_home_data) para garantizar persistencia de datos y configuraciones de Flowise.
+
+## 🛠️ Recomendaciones para el despliegue correcto
+
+1. **Requisitos previos de la máquina**
+      
+      - Contar con al menos `5 GB libres` en disco para imágenes, capas y volúmenes de Docker.
+      - Memoria RAM mínima: `2 GB disponibles` (Flowise + Postgres son relativamente livianos, pero requieren cierto buffer).
+      - Tener instalado `Docker Engine y Docker Compose V2` (docker compose).
+
+2.	**Archivo .env bien configurado**
+   
+      - Definir correctamente:
+         - POSTGRES_IMAGE, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD.
+         - FLOWISE_IMAGE, FLOWISE_PORT, FLOWISE_USERNAME, FLOWISE_PASSWORD.
+
+3.	**Archivo docker-compose.yml validado**
+
+      - Confirmar que la sintaxis YAML es correcta (docker compose config).
+      - Incluir el command: ["flowise", "start"] en el servicio flowise.
+      - Definir restart: unless-stopped para garantizar alta disponibilidad.
+
